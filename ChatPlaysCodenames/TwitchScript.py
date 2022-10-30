@@ -79,19 +79,20 @@ class TwitchBot:
     
     def get_message_info(self, line) -> list:
         message = None
-        user = None
         seperator = 'PRIVMSG'
         last_elements = line.split(seperator)[-1].split(':', 1)
         message = last_elements[1]
 
 
         metas = line.split(';')
-        for m in metas:
-            if m == 'display-name':
-                user = m.split('=')[-1]
-                break
+        for meta in metas:
+            temp = meta.split('=', 1)
+            if len(temp) == 2:
+                if temp[0] == 'display-name':
+                    return [temp[1], message]
+        return [None, message]
 
-        return [user, message]
+        
     
                    
     def start_bot(self):
