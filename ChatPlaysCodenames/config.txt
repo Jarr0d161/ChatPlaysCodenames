@@ -1,0 +1,6 @@
+TESSERACT=C:\Program Files\Tesseract-OCR\tesseract.exe
+AUTH=oauth:<BuchStabenUndZiffern>
+CHANNEL=<Channel-Name-wie-im-Browser>
+SERVER=irc.twitch.tv
+PORT=6667
+NAME=ChatBot
