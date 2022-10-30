@@ -137,38 +137,38 @@ class TwitchBotGUI(tk.Frame):
                 word = mvw.upper()
             else:
                 word = None
-            self.someBot.sendMessage(f'SPIELANSAGE: Das Voting ist beendet! Ausgewähltes Wort: {word}')
             self.label_output.config(text=f'Wir haben uns für {word} entschieden.')
             self.someBot.bool_voting = False
             self.someBot.most_voted = None
             self.someBot.most_voted_counter = 0
             self.object_detector.load_image(self.get_screenshot())
-            if mvw is not None:
-                if mvw != 'skip':
-                    textlist = self.object_detector.get_texts_from_areas()
-                    arr_click = self.object_detector.find_click_area()
-                    mc.click_at(arr_click[textlist.index(mvw)])
-                else:
-                    mc.click_at(self.object_detector.get_skip_button())
-                    time.sleep(1)
-                    self.object_detector.load_image(self.get_screenshot())
-                    rec = self.object_detector.get_skip_button_approval()
-                    if rec is not None:
-                        mc.click_at(rec)
-                time.sleep(5)
+            if mvw != 'skip'and mvw is not None:
+                self.someBot.sendMessage(f'SPIELANSAGE: Das Voting ist beendet! Ausgewähltes Wort: {word}')
+                textlist = self.object_detector.get_texts_from_areas()
+                arr_click = self.object_detector.find_click_area()
+                mc.click_at(arr_click[textlist.index(mvw)])
+            else:
+                self.someBot.sendMessage('SPIELANSAGE: Das Voting ist beendet! Wir skippen lieber!')
+                mc.click_at(self.object_detector.get_skip_button())
+                time.sleep(1)
+                self.object_detector.load_image(self.get_screenshot())
+                rec = self.object_detector.get_skip_button_approval()
+                if rec is not None:
+                    mc.click_at(rec)
+            time.sleep(5)
+            state = self.get_current_state()
+            while state is None:
                 state = self.get_current_state()
-                while state is None:
-                    state = self.get_current_state()
-                if state==0:
-                    self.label_output.config(text=f'Wir sind weiter am Zug und befinden uns in Runde {self.round_count}.')
-                    self.listen_to_chat()
-                    self.after_listener = self.after(1000, self.check_voting)
-                elif state==1:
-                    self.stopButton()
-                    self.label_output.config(text='Vorkehrungen treffen und Bot starten.')
-                else:
-                    self.label_output.config(text=r'Wir warten auf die Anderen, die sind meist sehr langsam :/')
-                    self.handle_turn()          
+            if state==0:
+                self.label_output.config(text=f'Wir sind weiter am Zug und befinden uns in Runde {self.round_count}.')
+                self.listen_to_chat()
+                self.after_listener = self.after(1000, self.check_voting)
+            elif state==1:
+                self.stopButton()
+                self.label_output.config(text='Vorkehrungen treffen und Bot starten.')
+            else:
+                self.label_output.config(text=r'Wir warten auf die Anderen, die sind meist sehr langsam :/')
+                self.handle_turn()          
         else:
             self.after_listener = self.after(1000, self.check_voting)
         
