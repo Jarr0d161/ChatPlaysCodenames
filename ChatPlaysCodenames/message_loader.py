@@ -10,8 +10,8 @@ class VoteListener:
     def add_vote(self, user:str, word:str):
         if self.check_user(user):
             self.voting_buffer = self.voting_buffer[self.voting_buffer['user'].str.contains(user)==False]
-        new_row = {'user':user, 'word':word}
-        self.voting_buffer = self.voting_buffer.append(new_row, ignore_index=True)
+        new_row = pd.Series({'user':user, 'word':word})
+        self.voting_buffer = pd.concat([self.voting_buffer, new_row.to_frame().T], ignore_index=True)
         
     def check_user(self, user:str) -> bool:
         return (self.voting_buffer['user'].eq(user)).any()
