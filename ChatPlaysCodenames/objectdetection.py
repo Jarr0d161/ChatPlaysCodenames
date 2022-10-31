@@ -93,7 +93,6 @@ class ObjectDetector:
         padding = 2
         
         y_top = conts_s[1] + conts_s[3]
-        y_bot = conts_o[1]
         
         if conts_o is None:
             img_copy = self.image.copy()[y_top+padding:,x_left+padding:x_right-padding]
